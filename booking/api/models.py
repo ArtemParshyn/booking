@@ -1,11 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-choices = [
-    ("F", "free"),
-    ("R", "reserved")
-]
-
 
 class ApiUser(AbstractUser):
     ...
