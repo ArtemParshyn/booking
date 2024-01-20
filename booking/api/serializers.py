@@ -1,4 +1,7 @@
+from django.db.models import Count
 from rest_framework import serializers, validators
+
+from . import models
 from .models import ApiUser, Booking, Hotel, Room
 
 
@@ -28,17 +31,37 @@ class UserSerializer(serializers.Serializer):
         return user
 
 
+
+
+
+class RoomSerializer(serializers.Serializer):
+
+    number = serializers.IntegerField()
+    hotel = serializers.PrimaryKeyRelatedField(queryset=Hotel.objects.all())
+    status = serializers.ChoiceField(choices=models.choices)
+
+    def validate(self, data):
+        hotel = data['hotel']
+        number = data['number']
+        print(hotel, number)
+        existing_room = Room.objects.filter(hotel=hotel, number=number).first()
+        if existing_room:
+            raise serializers.ValidationError("Комната с таким номером уже существует в этом отеле.")
+        return data
+
+    def create(self, validated_data):
+        room = Room.objects.create(
+            number=validated_data["number"],
+            hotel=validated_data["hotel"],
+            status=validated_data["status"]
+        )
+        return room
+
 class HotelSerializer(serializers.ModelSerializer):
+    rooms = RoomSerializer(many=True, read_only=True)
     class Meta:
         model = Hotel
-        fields = ["name", "street", "cost"]
-
-
-class RoomSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Room
-        fields = ('number', 'hotel', 'status')
-
+        fields = ["name", "street", "cost", "rooms"]
 
 class BookSerializer(serializers.Serializer):
     class Meta:

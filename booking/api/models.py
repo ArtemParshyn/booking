@@ -12,13 +12,13 @@ class ApiUser(AbstractUser):
 
 
 class Hotel(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     street = models.CharField(max_length=64)
     cost = models.IntegerField()
 
 
 class Room(models.Model):
-    number = models.IntegerField(unique=True)
+    number = models.IntegerField()
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name="rooms")
     status = models.CharField(max_length=1, choices=choices)
 
