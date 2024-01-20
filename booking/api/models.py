@@ -20,10 +20,10 @@ class Hotel(models.Model):
 class Room(models.Model):
     number = models.IntegerField()
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name="rooms")
-    status = models.CharField(max_length=1, choices=choices)
 
 
 class Booking(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="reservations")
     start = models.DateField()
     end = models.DateField()
+    user = models.ForeignKey(ApiUser, on_delete=models.CASCADE)
