@@ -19,6 +19,7 @@ class Room(models.Model):
 
 class Booking(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="reservations")
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
     start = models.DateField()
     end = models.DateField()
     user = models.ForeignKey(ApiUser, on_delete=models.CASCADE)
