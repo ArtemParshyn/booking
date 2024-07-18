@@ -46,15 +46,15 @@ class BookSerializer(serializers.Serializer):
     room = serializers.ChoiceField(choices=[])
     start = serializers.DateField()
     end = serializers.DateField()
-    user = serializers.ChoiceField(choices=[])
     hotel = serializers.CharField(read_only=True)
+
 
     def __init__(self, *args, **kwargs):
         super(BookSerializer, self).__init__(*args, **kwargs)
         self.number = None
         self.hotel = None
         self.fields['room'].choices = [f"{r.hotel.name} {r.number}" for r in Room.objects.all()]
-        self.fields["user"].choices = [f"{r.username}" for r in ApiUser.objects.all()]
+        #self.fields['user'].choices = [f"{r.username}" for r in ApiUser.objects.all()]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -83,7 +83,7 @@ class BookSerializer(serializers.Serializer):
             room=validated_data["room"],
             start=validated_data["start"],
             end=validated_data["end"],
-            user=ApiUser.objects.get(username=validated_data["user"]),
+            user=validated_data["user"],
             hotel=validated_data["hotel"],
         )
         return booking

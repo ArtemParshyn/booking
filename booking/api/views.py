@@ -37,9 +37,9 @@ class BookingModelViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             validated_data = serializer.validated_data
 
-            for i in Booking.objects.all():
-                print(i.hotel, validated_data["hotel"])
-                print(i.room, validated_data["room"])
+            #for i in Booking.objects.all():
+            #    print(i.hotel, validated_data["hotel"])
+            #    print(i.room, validated_data["room"])
 
             for i in Booking.objects.all().filter(hotel=validated_data["hotel"], room=validated_data["room"]):
                 print("continued")
@@ -54,7 +54,7 @@ class BookingModelViewSet(viewsets.ModelViewSet):
                         validated_data["start"] <= i.end >= validated_data["end"] and not
                         validated_data["start"] <= i.start >= validated_data["end"]):
                     return Response("Already reserved", status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            serializer.save()
+            serializer.save(user=self.request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
