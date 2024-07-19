@@ -1,4 +1,6 @@
+from django.shortcuts import render
 from rest_framework import viewsets, status
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from .serializers import UserSerializer, HotelSerializer, BookSerializer, RoomSerializer
@@ -26,18 +28,20 @@ class RoomModelViewSet(viewsets.ModelViewSet):
 class BookingModelViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "bookings_list.html"
 
-    def get(self, request):
-        queryset = Room.objects.all()
-        serializer = BookSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def list(self, request, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({'bookings': serializer.data}, template_name=self.template_name)
 
     def create(self, request, *args, **kwargs):
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             validated_data = serializer.validated_data
 
-            #for i in Booking.objects.all():
+            # for i in Booking.objects.all():
             #    print(i.hotel, validated_data["hotel"])
             #    print(i.room, validated_data["room"])
 
