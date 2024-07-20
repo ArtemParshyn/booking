@@ -21,7 +21,7 @@ class HotelModelViewSet(viewsets.ModelViewSet):
 
 class RoomModelViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
-    http_method_names = ['post', "patсh", "get", "delete"]
+    http_method_names = ["post", "patсh", "get", "delete"]
     serializer_class = RoomSerializer
 
 
@@ -34,17 +34,12 @@ class BookingModelViewSet(viewsets.ModelViewSet):
     def list(self, request, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        return Response({'bookings': serializer.data}, template_name=self.template_name)
+        return Response({"bookings": serializer.data}, template_name=self.template_name)
 
     def create(self, request, *args, **kwargs):
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             validated_data = serializer.validated_data
-
-            # for i in Booking.objects.all():
-            #    print(i.hotel, validated_data["hotel"])
-            #    print(i.room, validated_data["room"])
-
             for i in Booking.objects.all().filter(hotel=validated_data["hotel"], room=validated_data["room"]):
                 print("continued")
                 print(validated_data["start"], i.start, validated_data["end"])
