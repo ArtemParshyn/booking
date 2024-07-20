@@ -30,6 +30,7 @@
           <option value="booking1.api.serializers.api" />
           <option value="api.models.Storage.objects" />
           <option value="api.models.Good.objects" />
+          <option value="booking.api.models.Hotel.objects" />
         </list>
       </option>
     </inspection_tool>
